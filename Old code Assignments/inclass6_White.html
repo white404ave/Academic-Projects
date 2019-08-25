@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body><br>
+  <form id="form">
+    Departure City:<input type="text" name="departCity" id='departCity'><br>
+    Destination City:<input type="text" name="arriveCity" id='arriveCity'><br>
+    <input type="submit" value="Search"><br>
+  </form>
+  <br>
+  <div id="content">
+
+  </div>
+  <script  type = "text/javascript">
+    $(document).ready(function(){
+      $("#form").submit(function(){
+        $.post('inclass6_White.php', $("#form").serialize(), function(data){
+	  $("#content").empty();
+		json_obj = JSON.parse(data);
+		$('#departCity').val(json_obj.origin_addresses[0]);
+		$('#arriveCity').val(json_obj.destination_addresses[0]);
+		$("#content").append('<table id="table" border="1"><tr><th>Distance</th><th>Travel Time</th></tr></table>');
+		$.each(json_obj.rows[0].elements, function(){
+		  $("#table").append("<tr><td>"+this.distance.text+"</td><td>"+this.duration.text+"</td></tr>");
+		});
+         });
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>
